@@ -19,7 +19,6 @@ ORG 0x7C00  ; Define que o código será carregado no endereço 0x7C00
     mov si, msg_loading
     call print_string
 
-    ; ===================================
     ; Carrega o filesystem na memória (0x0900:0000)
     mov ah, 0x02  ; Função de leitura do disco
     mov al, 1     ; Número de setores para ler
@@ -40,7 +39,6 @@ ORG 0x7C00  ; Define que o código será carregado no endereço 0x7C00
     ; Executa o filesystem
     call 0x0900:0x0000
 
-    ; ===================================
     ; Carrega o kernel no endereço 0x1000:0000
     mov ah, 0x02  ; Função de leitura do disco
     mov al, 10    ; Número de setores para ler
@@ -58,7 +56,6 @@ ORG 0x7C00  ; Define que o código será carregado no endereço 0x7C00
     mov si, msg_after_kernel_load
     call print_string  ; Mensagem para depuração
 
-    ; ===================================
     ; Verificação de integridade do kernel
     cmp byte [es:0x0000], 0xE9
     je integrity_check_ok
@@ -116,7 +113,7 @@ print_hex:
     pop ax
     ret
 
-; ==== Outras funções de impressão ====
+; Outras funções de impressão
 print_string:
     lodsb
     test al, al
@@ -134,7 +131,7 @@ reboot:
     mov word [0x0072], 0x0000
     jmp 0xFFFF:0x0000  ; Reinicia o sistema
 
-; ==== Dados ====
+; Dados
 msg_loading db "Loading Filesystem and Kernel...", 0x0D, 0x0A, 0
 msg_after_fs_load db "Filesystem read OK!", 0x0D, 0x0A, 0
 msg_after_kernel_load db "Kernel read OK!", 0x0D, 0x0A, 0
