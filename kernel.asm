@@ -4,7 +4,6 @@ ORG 0x0000  ; O kernel será carregado neste endereço
 
 jmp start  ; Pula a seção de dados
 
-; ==== Dados ====
 msg        db "Welcome to micro-os!", 0Dh, 0Ah, 0
 cmd_size   equ 10  ; Tamanho máximo do comando
 command_buffer db cmd_size dup(0)
@@ -21,7 +20,6 @@ unknown    db "Comando desconhecido: ", 0
 file_msg   db "Arquivos:", 0Dh, 0Ah, 0
 load_msg   db "Carregando arquivo...", 0Dh, 0Ah, 0
 
-; ==== Código ====
 start:
     cli
     mov ax, 0x0800
@@ -44,7 +42,6 @@ main_loop:
     call process_cmd
     jmp main_loop
 
-; ==== Lê comando do usuário ====
 get_command:
     lea si, [prompt]
     call print_string
@@ -53,7 +50,6 @@ get_command:
     call get_string
     ret
 
-; ==== Processa o comando ====
 process_cmd:
     lea si, [command_buffer]
     lea di, [chelp]
@@ -87,21 +83,21 @@ print_help:
     call print_string
     ret
 
-; ==== Lista arquivos do sistema ====
+
 list_files:
     lea si, [file_msg]
     call print_string
     call 0x0900:0x0100  ; Chama a função de listar arquivos do FS
     ret
 
-; ==== Carrega um arquivo ====
+
 load_file:
     lea si, [load_msg]
     call print_string
     call 0x0900:0x0200  ; Chama a função de carregar um arquivo do FS
     ret
 
-; ==== Compara duas strings ====
+
 strcmp:
     mov cx, 0xFFFF
 .loop:
@@ -116,7 +112,7 @@ strcmp:
     mov ax, 1
     ret
 
-; ==== Limpa a tela ====
+
 clear_screen:
     mov ah, 0x06
     mov al, 0
@@ -128,14 +124,14 @@ clear_screen:
     int 0x10
     ret
 
-; ==== Reinicia o sistema ====
+
 reboot:
     mov ax, 0x0040
     mov ds, ax
     mov word [0x0072], 0x0000
     jmp 0FFFFh:0000h
 
-; ==== Lê uma string do teclado ====
+
 get_string:
     xor cx, cx
 .read:
@@ -149,7 +145,7 @@ get_string:
     mov byte [di], 0
     ret
 
-; ==== Imprime string ====
+
 print_string:
     lodsb
     test al, al
