@@ -3,7 +3,7 @@ ORG 0x0900  ; O código do FS será carregado no segmento 0x0900
 
 jmp start  ; Pula a seção de dados
 
-; ==== Tabela de Arquivos ====
+;Tabela de Arquivos
 file_table:
     db "file1.bin",  2,  5  ; Nome, setor inicial, tamanho (setores)
     db "file2.bin",  7,  3
@@ -17,7 +17,7 @@ start:
     call load_file     ; Solicita arquivo para carregar
     ret  ; Retorna ao kernel
 
-; ==== Rotina para listar arquivos ====
+; Rotina para listar arquivos
 list_files:
     pusha
     lea si, file_table
@@ -39,7 +39,7 @@ list_files:
     popa
     ret
 
-; ==== Rotina para carregar um arquivo ====
+;Rotina para carregar um arquivo
 load_file:
     pusha
     lea si, file_table
@@ -100,7 +100,7 @@ load_file:
     popa
     ret
 
-; ==== Função de comparação de strings ====
+;Função de comparação de strings
 strcmp:
     mov cx, 11
 .loop:
@@ -115,7 +115,7 @@ strcmp:
     mov ax, 1
     ret
 
-; ==== Entrada de dados ====
+;Entrada de dados
 get_string:
     xor cx, cx
 .read:
@@ -129,7 +129,7 @@ get_string:
     mov byte [di], 0
     ret
 
-; ==== Imprime string ====
+;Imprime string
 print_string:
     lodsb
     test al, al
@@ -140,13 +140,12 @@ print_string:
 .done:
     ret
 
-; ==== Imprime caractere ====
+;Imprime caractere 
 print_char:
     mov ah, 0x0E
     int 0x10
     ret
 
-; ==== Mensagens ====
 msg_fs_loaded db "Filesystem Loaded!", 0Dh, 0Ah, 0
 load_msg db "Nome do arquivo: ", 0
 nf_msg   db "Arquivo nao encontrado!", 0Dh, 0Ah, 0
@@ -154,6 +153,6 @@ err_msg  db "Erro ao ler do disco!", 0Dh, 0Ah, 0
 success_msg db "Arquivo carregado com sucesso!", 0Dh, 0Ah, 0
 buffer   times 11 db 0
 
-; ==== Preenchendo até 512 bytes ====
+; Preenchendo até 512 bytes
 times 512-($-$$) db 0
 
